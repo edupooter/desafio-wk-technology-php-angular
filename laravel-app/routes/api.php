@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\Admin\ProductController;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,26 +17,11 @@ use App\Http\Controllers\Api\V1\Admin\ProductController;
 |
 */
 
-Route::group(
-    [
-        'prefix' => 'v1',
-        'as' => 'api.',
-        'namespace' => 'Api\V1\Admin',
-    ],
-    function () {
-        Route::resource('products', 'ProductController');
-        // Route::apiResource('abilities', 'AbilitiesController', ['only' => ['index']]);
+// Route::resource('products', ProductController::class);
+// Route::resource('customer', CustomerController::class);
 
-        // Route::get('locales/languages', 'LocalesController@languages')->name('locales.languages');
-        // Route::get('locales/messages', 'LocalesController@messages')->name('locales.messages');
+Route::apiResources([
+  'products' => ProductController::class,
+  'customer' => CustomerController::class,
+]);
 
-        // Route::resource('permissions', 'PermissionsApiController');
-
-        // Route::resource('roles', 'RolesApiController');
-
-
-        // Route::resource('contact-companies', 'ContactCompanyApiController');
-
-        // Route::resource('contact-contacts', 'ContactContactsApiController');
-    }
-);
