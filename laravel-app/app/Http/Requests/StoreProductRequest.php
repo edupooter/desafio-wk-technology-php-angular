@@ -23,7 +23,17 @@ class StoreProductRequest extends FormRequest
                 'required',
                 'numeric',
                 'regex:/^\d+(\.\d{1,2})?$/',
+                'min:0',
+                'max:10000000',
             ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'The :attribute field can not be blank value',
+            'name.amount' => 'The :attribute field can not be blank value, and must be up to 10000000',
         ];
     }
 }
