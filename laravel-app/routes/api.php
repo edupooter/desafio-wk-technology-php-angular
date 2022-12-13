@@ -17,11 +17,7 @@ use App\Http\Controllers\CustomerController;
 |
 */
 
-// Route::resource('products', ProductController::class);
-// Route::resource('customer', CustomerController::class);
-
 Route::apiResources([
   'products' => ProductController::class,
-  'customer' => CustomerController::class,
+  'customers' => CustomerController::class,
 ]);
-
