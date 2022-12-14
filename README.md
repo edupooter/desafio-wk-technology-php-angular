@@ -1,24 +1,32 @@
-## Solução proposta para o desafio
+## Solução proposta para o desafio WK Technology
 
-Projeto usado durante o processo seletivo para desenvolvedor PHP/Angular na WK Technology.
+Projeto usado durante o processo seletivo para desenvolvedor PHP + Angular na WK Technology.
 
-### Ambiente
+- Backend: PHP 8 com Laravel 9 e MySQL 8
+- Frontend: Angular ...
+
+### Ambiente local
 
 Desenvolvido com Laravel Sail no Ubuntu via WSL2 com Docker Engine nativo do Linux.
 
-### Instalação de dependências backend
+### Protocolo da API
+
+Exemplos de requisições HTTP na pasta **http-requests**
+
+### Backend
+#### Instalação das dependências
 ```
 $ cd laravel-app
 $ composer install
 ```
 
-### Inicialização dos serviços backend
+#### Inicialização dos serviços
 ```
 $ cd laravel-app
 $ ./vendor/bin/sail up -d
 ```
 
-### Execução **testes** backend
+#### Execução dos **testes**
 ```
 $ cd laravel-app
 $ ./vendor/bin/sail artisan test
