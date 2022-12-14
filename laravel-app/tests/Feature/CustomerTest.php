@@ -12,6 +12,8 @@ class CustomerTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    private $customerData = [];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -49,6 +51,53 @@ class CustomerTest extends TestCase
             ->assertJson([
                 'data' => $this->customerData,
             ]);
+    }
+
+    public function test_customer_can_be_retrieved()
+    {
+        $customer = Customer::create($this->customerData);
+
+        $response = $this->getJson('/api/customers/'.$customer->id);
+
+        $response
+            ->assertOk()
+            ->assertJson([
+                'data' => $this->customerData,
+            ]);
+    }
+
+    public function test_customer_can_be_updated()
+    {
+        $customer = Customer::create($this->customerData);
+
+        $customerNewData = [
+            'name' => $this->faker->name(),
+            'cpf' => $this->faker->cpf(false),
+            'date_of_birth' => $this->faker->date('Y-m-d', '2002-01-31'),
+            'email' => $this->faker->safeEmail(false),
+            'ad_cep' => '92200-602',
+            'ad_street' => $this->faker->streetName(),
+            'ad_number' => $this->faker->buildingNumber(),
+            'ad_comp' => $this->faker->secondaryAddress(),
+            'ad_city' => $this->faker->city(),
+        ];
+
+        $response = $this->putJson('/api/customers/'.$customer->id, $customerNewData);
+
+        $response
+            ->assertStatus(202)
+            ->assertJson([
+                'data' => $customerNewData,
+            ]);
+    }
+
+    public function test_customer_can_be_deleted()
+    {
+        $customer = Customer::create($this->customerData);
+
+        $response = $this->delete('/api/customers/'.$customer->id);
+
+        $response->assertNoContent();
     }
 
     public function test_invalid_customer_cannot_be_created()

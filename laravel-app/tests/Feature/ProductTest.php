@@ -50,7 +50,7 @@ class ProductTest extends TestCase
     {
         $product = Product::create($this->productData);
 
-        $response = $this->getJson('/api/products/' . $product->id);
+        $response = $this->getJson('/api/products/'.$product->id);
 
         $response
             ->assertOk()
@@ -71,7 +71,7 @@ class ProductTest extends TestCase
         $response = $this->putJson('/api/products/'.$product->id, $productNewData);
 
         $response
-            ->assertSuccessful()
+            ->assertStatus(202)
             ->assertJson([
                 'data' => $productNewData,
             ]);
@@ -81,8 +81,60 @@ class ProductTest extends TestCase
     {
         $product = Product::create($this->productData);
 
-        $response = $this->deleteJson('/api/products/' . $product->id);
+        $response = $this->deleteJson('/api/products/'.$product->id);
 
-        $response->assertNoContent(204);
+        $response->assertNoContent();
+    }
+
+    public function test_invalid_product_cannot_be_created()
+    {
+        $invalidProductData = [
+            'name' => '',
+            'amount' => -100,
+        ];
+
+        $response = $this->postJson('/api/products', $invalidProductData);
+
+        $response
+            ->assertStatus(422)
+            ->assertInvalid([
+                'name',
+                'amount',
+            ]);
+    }
+
+    public function test_invalid_product_cannot_be_updated()
+    {
+        $invalidProductData = [
+            'name' => '',
+            'amount' => -100,
+        ];
+
+        $response = $this->postJson('/api/products', $invalidProductData);
+
+        $response
+            ->assertStatus(422)
+            ->assertInvalid([
+                'name',
+                'amount',
+            ]);
+    }
+
+    public function test_invalid_product_amount_cannot_be_updated()
+    {
+        $product = Product::create($this->productData);
+
+        $invalidProductData = [
+            'name' => 'Cadeira de escritório',
+            'amount' => 100000000000000000,
+        ];
+
+        $response = $this->putJson('/api/products/'.$product->id, $invalidProductData);
+
+        $response
+            ->assertStatus(422)
+            ->assertInvalid([
+                'amount',
+            ]);
     }
 }
