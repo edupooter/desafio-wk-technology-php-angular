@@ -1,0 +1,44 @@
+@hostname = localhost
+@port = 80
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@json = application/json
+@productName = Impressora Epson
+@productPrice = 899.55
+
+### Products index
+GET /api/products HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+
+### Products post
+POST /api/products HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+Content-Type: {{contentType}}
+
+{
+  "name": "{{productName}}",
+  "amount": {{productPrice}}
+}
+
+### Products get
+GET /api/products/1 HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+
+### Products update
+PUT /api/products/1 HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+Content-Type: {{json}}
+
+{
+  "name": "Notebook Gamer",
+  "amount": 5000.99
+}
+
+### Products delete
+DELETE /api/products/1 HTTP/1.1
+Host: {{host}}
+Accept: {{json}}

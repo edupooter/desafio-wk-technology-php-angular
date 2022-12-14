@@ -1,0 +1,65 @@
+@hostname = localhost
+@port = 80
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@json = application/json
+@name = Eduardo da Silva Souza
+@cpf = 36230306867
+@date_of_birth = 2001-01-01
+@email = eduardo.silva@gmail.com
+@ad_cep = 92200-602
+@ad_street = Rua do Limoeiro
+@ad_number = 98
+@ad_comp = sala 1
+@ad_city = São Paulo
+
+### Customers index
+GET /api/customers HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+
+### Customers post
+POST /api/customers HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+Content-Type: {{contentType}}
+
+{
+  "name": "{{name}}",
+  "cpf": "{{cpf}}",
+  "date_of_birth": "{{date_of_birth}}",
+  "email": "{{email}}",
+  "ad_cep": "{{ad_cep}}",
+  "ad_street": "{{ad_street}}",
+  "ad_number": {{ad_number}},
+  "ad_comp": "{{ad_comp}}",
+  "ad_city": "{{ad_city}}"
+}
+
+### Customers get
+GET /api/customers/1 HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+
+### Customers update
+PUT /api/customers/1 HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
+Content-Type: {{json}}
+
+{
+  "name": "Carlos Chaves",
+  "cpf": "06811324260",
+  "date_of_birth": "1991-12-31",
+  "email": "carlos-chaves@example.com",
+  "ad_cep": "91361-111",
+  "ad_street": "Rua das Hortências",
+  "ad_number": 787,
+  "ad_comp": "apto 1",
+  "ad_city": "Varginha"
+}
+
+### Customers delete
+DELETE /api/customers/1 HTTP/1.1
+Host: {{host}}
+Accept: {{json}}
