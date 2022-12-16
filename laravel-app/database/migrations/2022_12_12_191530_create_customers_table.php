@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('ad_comp');
             $table->string('ad_city');
             $table->timestamps();
-            $table->softDeletes($column = 'deleted_at', $precision = 0);
+            $table->softDeletes('deleted_at', 0);
         });
     }
 

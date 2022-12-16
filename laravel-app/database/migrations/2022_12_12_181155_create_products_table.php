@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('amount', $precision = 10, $scale = 2);
+            $table->decimal('amount', 10, 2);
             $table->timestamps();
-            $table->softDeletes($column = 'deleted_at', $precision = 0);
+            $table->softDeletes('deleted_at', 0);
         });
     }
 
