@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SellingOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +19,5 @@ use App\Http\Controllers\CustomerController;
 Route::apiResources([
   'products' => ProductController::class,
   'customers' => CustomerController::class,
+  'selling-orders' => SellingOrderController::class,
 ]);
