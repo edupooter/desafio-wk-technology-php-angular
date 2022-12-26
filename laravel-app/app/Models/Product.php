@@ -15,4 +15,9 @@ class Product extends Model
         'name',
         'amount',
     ];
+
+    public function sellingOrders()
+    {
+        return $this->belongsToMany(SellingOrder::class);
+    }
 }

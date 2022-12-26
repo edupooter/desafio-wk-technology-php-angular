@@ -23,4 +23,9 @@ class Customer extends Model
         'ad_comp',
         'ad_city',
     ];
+
+    public function sellingOrders()
+    {
+        return $this->hasMany(SellingOrder::class);
+    }
 }

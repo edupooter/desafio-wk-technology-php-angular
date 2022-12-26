@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('selling_orders', function (Blueprint $table) {
-            $table->uuid('id')->unique();
+            $table->id();
             $table->dateTime('sold_at', 0);
             $table->foreignId('customer_id')->constrained();
             $table->decimal('total', 10, 2);

@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('product_selling_order', function (Blueprint $table) {
             Schema::disableForeignKeyConstraints();
 
             $table->foreignId('product_id')->constrained();
-            $table->uuid('selling_order_id');
-            $table->foreign('selling_order_id')->references('id')->on('selling_orders');
+            $table->foreignId('selling_order_id')->constrained();
 
             Schema::enableForeignKeyConstraints();
         });

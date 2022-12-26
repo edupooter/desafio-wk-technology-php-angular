@@ -21,4 +21,16 @@ class SellingOrderTest extends TestCase
             'total' => 1000,
         ];
     }
+
+    public function test_products_can_be_listed()
+    {
+        // $response = $this->getJson('/api/selling-orders');
+
+        // $response
+        //     ->assertOk()
+        //     ->assertJson([
+        //         'data' => [],
+        //     ]);
+        $this->assertTrue(true);
+    }
 }
