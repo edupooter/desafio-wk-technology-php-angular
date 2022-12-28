@@ -36,25 +36,23 @@ class SellingOrderTest extends TestCase
             'ad_city' => $this->faker->city(),
         ]);
 
-        $this->product1 = Product::create([
-            'name' => $this->faker->words(8, true),
-            'amount' => $this->faker->randomFloat(2, 1, 90899.99),
-        ]);
-
-        array_push($this->items, $this->product1);
-
-        $this->product2 = Product::create([
-            'name' => $this->faker->words(6, true),
-            'amount' => $this->faker->randomFloat(2, 1, 90899.99),
-        ]);
-
-        array_push($this->items, $this->product2);
-
-        $this->sold_at = $this->faker->dateTimeBetween('-1 week', 'now');
+        array_push(
+            $this->items,
+            Product::create([
+                'name' => $this->faker->words(8, true),
+                'amount' => $this->faker->randomFloat(2, 1, 90899.99),
+            ]),
+            Product::create([
+                'name' => $this->faker->words(6, true),
+                'amount' => $this->faker->randomFloat(2, 1, 90899.99),
+            ])
+        );
 
         foreach ($this->items as $item) {
             $this->total += $item->amount;
         }
+
+        $this->sold_at = $this->faker->dateTimeBetween('-1 week', 'now');
     }
 
     public function test_selling_order_can_be_created_on_database()
@@ -86,7 +84,7 @@ class SellingOrderTest extends TestCase
             'total' => $this->total,
         ]);
 
-        // N:N table (products per selling order)
+        // Assert N:N table (products per selling order)
         $this->assertDatabaseCount('product_selling_order', count($this->items));
 
         foreach ($this->items as $product) {
@@ -95,5 +93,69 @@ class SellingOrderTest extends TestCase
                 'selling_order_id' => $sellingOrder->id,
             ]);
         }
+    }
+
+    public function test_selling_order_can_be_listed_on_database()
+    {
+        SellingOrder::create([
+            'sold_at' => $this->sold_at,
+            'customer_id' => $this->customer->id,
+            'total' => $this->total,
+        ]);
+
+        $sellingOrder = SellingOrder::firstOrFail();
+
+        $this->assertModelExists($sellingOrder);
+        $this->assertDatabaseCount('selling_orders', 1);
+    }
+
+    public function test_selling_order_can_be_updated_on_database()
+    {
+        // Arrange
+        $newCustomer = Customer::create([
+            "name" => "Cristiana Mirella Pena",
+            "cpf" => "50976206315",
+            "date_of_birth" => "1994-06-05",
+            "email" => "deaguiar.noeli@example.net",
+            "ad_cep" => "79911-001",
+            "ad_street" => "Avenida Horácio",
+            "ad_number" => 98704,
+            "ad_comp" => "Fundos",
+            "ad_city" => "Vila Otávio"
+        ]);
+
+        $newProduct = Product::create([
+            'name' => $this->faker->words(6, true),
+            'amount' => $this->faker->randomFloat(2, 1, 90899.99),
+        ]);
+
+        $sellingOrder = SellingOrder::create([
+            'sold_at' => $this->sold_at,
+            'customer_id' => $this->customer->id,
+            'total' => $this->total,
+        ]);
+
+        $newSellingOrderData = [
+            'sold_at' => $this->faker->dateTimeBetween('-1 week', 'now'),
+            'customer_id' => $newCustomer->id,
+            'total' => $newProduct->amount,
+        ];
+
+        $sellingOrder->products()->attach($newProduct);
+
+        // Act
+        $sellingOrder->update($newSellingOrderData);
+
+        // Assert
+        $this->assertModelExists($sellingOrder);
+        $this->assertDatabaseHas('selling_orders', $newSellingOrderData);
+        $this->assertEquals($newProduct->amount, $sellingOrder->total);
+
+        // Assert N:N table (products per selling order)
+        $this->assertDatabaseCount('product_selling_order', 1);
+        $this->assertDatabaseHas('product_selling_order', [
+            'product_id' => $newProduct->id,
+            'selling_order_id' => $sellingOrder->id,
+        ]);
     }
 }

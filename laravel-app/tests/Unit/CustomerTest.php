@@ -70,8 +70,6 @@ class CustomerTest extends TestCase
     {
         $customer = Customer::create($this->customerData);
 
-        $customerId = $customer->id;
-
         $newCustomerData = [
             'name' => 'Carlos Chaves',
             'cpf' => '06811324260',
@@ -87,7 +85,6 @@ class CustomerTest extends TestCase
         $customer->update($newCustomerData);
 
         $this->assertModelExists($customer);
-        $this->assertEquals($customerId, $customer->id);
         $this->assertDatabaseHas('customers', $newCustomerData);
     }
 

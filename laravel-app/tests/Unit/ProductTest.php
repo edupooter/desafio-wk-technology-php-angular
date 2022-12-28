@@ -54,8 +54,6 @@ class ProductTest extends TestCase
     {
         $product = Product::create($this->productData);
 
-        $productId = $product->id;
-
         $newProductData = [
             'name' => 'Notebook Octane',
             'amount' => 1500.50,
@@ -64,7 +62,6 @@ class ProductTest extends TestCase
         $product->update($newProductData);
 
         $this->assertModelExists($product);
-        $this->assertEquals($productId, $product->id);
         $this->assertDatabaseHas('products', $newProductData);
     }
 
