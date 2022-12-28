@@ -158,4 +158,18 @@ class SellingOrderTest extends TestCase
             'selling_order_id' => $sellingOrder->id,
         ]);
     }
+
+    public function test_selling_order_can_be_deleted_on_database()
+    {
+        $sellingOrder = SellingOrder::create([
+            'sold_at' => $this->sold_at,
+            'customer_id' => $this->customer->id,
+            'total' => $this->total,
+        ]);
+
+        $sellingOrder->products()->detach();
+        $sellingOrder->delete();
+
+        $this->assertSoftDeleted($sellingOrder);
+    }
 }
