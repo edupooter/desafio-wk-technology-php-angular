@@ -11,6 +11,9 @@ class SellingOrder extends Model
     use HasFactory;
     use SoftDeletes;
 
+    private $products = [];
+    private float $total = 0;
+
     protected $fillable = [
         'sold_at',
         'customer_id',
@@ -27,4 +30,25 @@ class SellingOrder extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product)
+    {
+        $this->products[] = $product;
+
+        $this->sumUp($product);
+    }
+
+    private function sumUp(Product $product)
+    {
+        $this->total += $product->amount;
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
+    }
 }

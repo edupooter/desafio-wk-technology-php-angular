@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\SellingOrder;
+use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,9 +16,9 @@ class SellingOrderTest extends TestCase
     use WithFaker;
 
     private Customer $customer;
-    private Product $product1;
-    private Product $product2;
-    private array $sellingOrder = [];
+    private DateTime $sold_at;
+    private array $items = [];
+    private float $total = 0;
 
     public function setUp(): void
     {
@@ -36,59 +37,63 @@ class SellingOrderTest extends TestCase
         ]);
 
         $this->product1 = Product::create([
-            'name' => 'Notebook Laravel',
-            'amount' => $this->faker->randomFloat(2, 1, 5500.99),
+            'name' => $this->faker->words(8, true),
+            'amount' => $this->faker->randomFloat(2, 1, 90899.99),
         ]);
+
+        array_push($this->items, $this->product1);
 
         $this->product2 = Product::create([
-            'name' => 'Cadeira Max',
-            'amount' => $this->faker->randomFloat(2, 1, 5500.99),
+            'name' => $this->faker->words(6, true),
+            'amount' => $this->faker->randomFloat(2, 1, 90899.99),
         ]);
 
-        $this->sellingOrder = [
-            'sold_at' => $this->faker->dateTimeBetween('-1 week', 'now'),
-            'customer_id' => $this->customer->id,
-        ];
+        array_push($this->items, $this->product2);
+
+        $this->sold_at = $this->faker->dateTimeBetween('-1 week', 'now');
+
+        foreach ($this->items as $item) {
+            $this->total += $item->amount;
+        }
     }
 
     public function test_selling_order_can_be_created_on_database()
     {
-        $items = [
-            $this->product1,
-            $this->product2,
-        ];
+        // Arrange
+        $order = new SellingOrder();
 
-        $total = 0;
-
-        foreach ($items as $item) {
-            $total += $item->amount;
+        foreach ($this->items as $item) {
+            $order->addProduct($item);
         }
 
+        // Act
         $sellingOrder = SellingOrder::create([
-            'sold_at' => $this->sellingOrder['sold_at'],
+            'sold_at' => $this->sold_at,
             'customer_id' => $this->customer->id,
-            'total' => $total,
+            'total' => $order->getTotal(),
         ]);
+        foreach ($order->getProducts() as $product) {
+            $sellingOrder->products()->attach($product);
+        }
 
-        $sellingOrder->products()->attach($this->product1);
-        $sellingOrder->products()->attach($this->product2);
-
+        // Assert
+        $this->assertEquals($this->total, $sellingOrder->total);
         $this->assertModelExists($sellingOrder);
         $this->assertDatabaseCount('selling_orders', 1);
         $this->assertDatabaseHas('selling_orders', [
-            'sold_at' => $this->sellingOrder['sold_at'],
+            'sold_at' => $this->sold_at,
             'customer_id' => $this->customer->id,
-            'total' => $total,
+            'total' => $this->total,
         ]);
 
-        $this->assertDatabaseCount('product_selling_order', 2);
-        $this->assertDatabaseHas('product_selling_order', [
-            'product_id' => $this->product1->id,
-            'selling_order_id' => $sellingOrder->id,
-        ]);
-        $this->assertDatabaseHas('product_selling_order', [
-            'product_id' => $this->product2->id,
-            'selling_order_id' => $sellingOrder->id,
-        ]);
+        // N:N table (products per selling order)
+        $this->assertDatabaseCount('product_selling_order', count($this->items));
+
+        foreach ($this->items as $product) {
+            $this->assertDatabaseHas('product_selling_order', [
+                'product_id' => $product->id,
+                'selling_order_id' => $sellingOrder->id,
+            ]);
+        }
     }
 }
