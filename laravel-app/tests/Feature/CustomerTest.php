@@ -49,7 +49,7 @@ class CustomerTest extends TestCase
         $response
             ->assertCreated()
             ->assertJson([
-                'data' => $this->customerData,
+                'data' => [],
             ]);
     }
 
@@ -57,7 +57,7 @@ class CustomerTest extends TestCase
     {
         $customer = Customer::create($this->customerData);
 
-        $response = $this->getJson('/api/customers/'.$customer->id);
+        $response = $this->getJson('/api/customers/' . $customer->id);
 
         $response
             ->assertOk()
@@ -82,7 +82,7 @@ class CustomerTest extends TestCase
             'ad_city' => $this->faker->city(),
         ];
 
-        $response = $this->putJson('/api/customers/'.$customer->id, $customerNewData);
+        $response = $this->putJson('/api/customers/' . $customer->id, $customerNewData);
 
         $response
             ->assertStatus(202)
@@ -95,7 +95,7 @@ class CustomerTest extends TestCase
     {
         $customer = Customer::create($this->customerData);
 
-        $response = $this->delete('/api/customers/'.$customer->id);
+        $response = $this->delete('/api/customers/' . $customer->id);
 
         $response->assertNoContent();
     }

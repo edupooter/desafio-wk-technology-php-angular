@@ -50,7 +50,7 @@ class ProductTest extends TestCase
     {
         $product = Product::create($this->productData);
 
-        $response = $this->getJson('/api/products/'.$product->id);
+        $response = $this->getJson('/api/products/' . $product->id);
 
         $response
             ->assertOk()
@@ -68,7 +68,7 @@ class ProductTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 999888.80),
         ];
 
-        $response = $this->putJson('/api/products/'.$product->id, $productNewData);
+        $response = $this->putJson('/api/products/' . $product->id, $productNewData);
 
         $response
             ->assertStatus(202)
@@ -81,7 +81,7 @@ class ProductTest extends TestCase
     {
         $product = Product::create($this->productData);
 
-        $response = $this->deleteJson('/api/products/'.$product->id);
+        $response = $this->deleteJson('/api/products/' . $product->id);
 
         $response->assertNoContent();
     }
@@ -129,7 +129,7 @@ class ProductTest extends TestCase
             'amount' => 100000000000000000,
         ];
 
-        $response = $this->putJson('/api/products/'.$product->id, $invalidProductData);
+        $response = $this->putJson('/api/products/' . $product->id, $invalidProductData);
 
         $response
             ->assertStatus(422)

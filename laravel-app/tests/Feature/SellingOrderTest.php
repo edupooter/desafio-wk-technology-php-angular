@@ -22,7 +22,7 @@ class SellingOrderTest extends TestCase
         ];
     }
 
-    public function test_products_can_be_listed()
+    public function test_selling_orders_can_be_listed()
     {
         // $response = $this->getJson('/api/selling-orders');
 
