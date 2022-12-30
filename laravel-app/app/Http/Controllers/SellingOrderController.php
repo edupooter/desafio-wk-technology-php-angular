@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSellingOrderRequest;
 use App\Http\Requests\UpdateSellingOrderRequest;
+use App\Http\Resources\SellingOrderResource;
 use App\Models\SellingOrder;
+use Illuminate\Http\Response;
 
 class SellingOrderController extends Controller
 {
@@ -15,7 +17,7 @@ class SellingOrderController extends Controller
      */
     public function index()
     {
-        //
+        return new SellingOrderResource(SellingOrder::all());
     }
 
     /**
@@ -26,7 +28,11 @@ class SellingOrderController extends Controller
      */
     public function store(StoreSellingOrderRequest $request)
     {
-        //
+        $order = SellingOrder::create($request->validated());
+
+        return (new SellingOrderResource($order))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
